@@ -51,7 +51,7 @@
                 </v-btn>
               </v-col>
               <v-col>
-                <v-btn color="primary" @click="verificaCodigo()" :loading="loading" :disabled="codigo_verificacion==''">
+                <v-btn color="primary" @click="verificaCodigo()" :loading="loading_verify_code" :disabled="codigo_verificacion==''">
                   Verificar Codigo
                 </v-btn>
               </v-col>
@@ -102,6 +102,7 @@ export default {
       password_confirm: '',
       show_password_confirm: false,
       loading: false,
+      loading_verify_code: false,
       send_again_time: 0,
     }
   },
@@ -144,7 +145,7 @@ export default {
     },
 
     async verificaCodigo(){
-      this.loading = true;
+      this.loading_verify_code = true;
       const url = 'verify-recuperar-password';
       const info = {
         code: parseInt(this.codigo_verificacion),
@@ -166,7 +167,7 @@ export default {
           data: error.response.data.message,
         });
       }
-      this.loading = false;
+      this.loading_verify_code = false;
     },
 
     async changePassword(){
