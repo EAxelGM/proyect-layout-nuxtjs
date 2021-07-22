@@ -5,7 +5,7 @@ recuerda hacer los siguientes paso
 
 ```bash
 # copiar el proyecto
-$ git clone ---
+$ git clone https://github.com/EAxelGM/proyect-layout-nuxtjs.git
 
 # eliminar las dependencias remotas
 $ git remote remove origin
