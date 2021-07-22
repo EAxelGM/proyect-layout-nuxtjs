@@ -23,7 +23,7 @@
             />
             <v-row>
               <v-col>
-                <v-btn color="primary" @click="step++" :loading="loading"> 
+                <v-btn color="primary" @click="enviarCorreo(true)" :loading="loading"> 
                   Enviar Codigo de Recuperacion
                 </v-btn>
               </v-col>
@@ -39,8 +39,8 @@
             />
             <v-row>
               <v-col>
-                <v-btn color="secondary" small text>
-                  No recibi ningun correo, enviar de nuevo.
+                <v-btn color="secondary" small text :disabled="send_again_time != 0" @click="enviarCorreo(false)" :loading="loading">
+                  No recibi ningun correo, enviar de nuevo {{send_again_time == 0 ? '' : 'en '+send_again_time}}
                 </v-btn>
               </v-col>
             </v-row>
@@ -51,7 +51,7 @@
                 </v-btn>
               </v-col>
               <v-col>
-                <v-btn color="primary" @click="step++" :loading="loading">
+                <v-btn color="primary" @click="verificaCodigo()" :loading="loading">
                   Verificar Codigo
                 </v-btn>
               </v-col>
@@ -69,7 +69,7 @@
             />
             <v-text-field 
               v-model="password_confirm"
-              label="Contraseña"
+              label="Confirme su Contraseña"
               prepend-icon="mdi-lock"
               :type="show_password_confirm ? 'text' : 'password'"
               :append-icon="show_password_confirm ? 'mdi-eye' : 'mdi-eye-off'"
@@ -102,16 +102,105 @@ export default {
       password_confirm: '',
       show_password_confirm: false,
       loading: false,
+      send_again_time: 0,
     }
   },
   methods:{
-    async changePassword(){
-      console.log('hola')
-      await this.$store.dispatch('alertas/GET_DATA', {
+    async enviarCorreo(avanza){
+      this.loading = true;
+      const url = 'send-email-recuperar-password';
+      const info = {
+        email: this.email
+      };
+
+      try {
+        const { data } = await this.$axios.post(url,info);
+        await this.$store.dispatch('alertas/GET_DATA', {
           color : 'success',
           snackbar : true,
-          data: 'emessage',
-      });
+          data: data.message,
+        });
+        if(avanza) this.step++;
+        this.contador();
+      } catch (error) {
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'error',
+          snackbar : true,
+          data: error.response.data.message,
+        });
+      }
+      this.loading = false;
+    },
+
+    contador(){
+      this.send_again_time = 40;
+      var x = setInterval(() => {
+        if(this.send_again_time == 0){ 
+          clearInterval(x) 
+          this.send_again_time++;
+        }
+        this.send_again_time--;
+      },1000);
+    },
+
+    async verificaCodigo(){
+      this.loading = true;
+      const url = 'verify-recuperar-password';
+      const info = {
+        code: parseInt(this.codigo_verificacion),
+        email: this.email
+      };
+
+      try {
+        const {data} = await this.$axios.post(url,info);
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'success',
+          snackbar : true,
+          data: data.message,
+        });
+        this.step++;
+      } catch (error) {
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'error',
+          snackbar : true,
+          data: error.response.data.message,
+        });
+      }
+      this.loading = false;
+    },
+
+    async changePassword(){
+      this.loading = true;
+      const url = 'profile/change-password';
+      const info = {
+        email: this.email,
+        password: this.password
+      };
+      if(this.password == this.password_confirm){
+        try {
+          const {data} = await this.$axios.post(url,info);
+          await this.$store.dispatch('alertas/GET_DATA', {
+            color : 'success',
+            snackbar : true,
+            data: data.message,
+          });
+          this.$router.push('/login');
+        } catch (error) {
+          await this.$store.dispatch('alertas/GET_DATA', {
+            color : 'error',
+            snackbar : true,
+            data: error.response.data.message,
+          });
+        }
+      }else{
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'error',
+          snackbar : true,
+          data: 'Las contraseñas no son iguales.',
+        });
+      }
+      this.loading = false;
+      
     }
   }
 }

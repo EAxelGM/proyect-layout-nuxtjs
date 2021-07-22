@@ -30,7 +30,7 @@
       </v-container>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary">
+        <v-btn color="primary" @click="login()" :loading="loading">
           Iniciar Sesion
         </v-btn>
         <v-spacer />
@@ -47,6 +47,30 @@ export default {
       password: '',
       show_password: false,
       loading: false,
+    }
+  },
+  methods:{
+    async login() {
+      this.loading = true;
+      try {
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.email,
+            password: this.password
+          }
+        })
+        
+        this.$router.push('/');
+        console.log('CONSOLA DE USUARIO');
+        console.log(this.$auth.user);
+      } catch (e) { 
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'error',
+          snackbar : true,
+          data : e.response.data.message
+        });
+      }
+      this.loading = false
     }
   }
 }

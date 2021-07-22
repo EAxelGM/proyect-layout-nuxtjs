@@ -13,6 +13,7 @@
 <script>
 import Form from '@/components/LoginOptions/EnviarCorreoRecuperacion'
 export default {
+  layout:'noLogged',
   components:{
     Form,
   },

@@ -43,6 +43,11 @@ export default {
       rightDrawer: false,
       title: 'Vuetify.js'
     }
+  },
+  mounted(){
+    if(this.$auth.loggedIn){
+      this.$router.push('/');
+    }
   }
 }
 </script>

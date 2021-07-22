@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app style="background-color: #ababab;">
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -48,7 +48,7 @@
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title>{{title}} - {{user.name}} {{user.lastname}}</v-toolbar-title>
       <v-spacer />
       <v-btn
         icon
@@ -90,6 +90,7 @@
 
 <script>
 export default {
+  middleware: 'auth',
   data () {
     return {
       clipped: false,
@@ -105,12 +106,18 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Inspire',
           to: '/inspire'
+        },
+        {
+          icon: 'mdi-logout',
+          title: 'Salir del sistema',
+          to: '/loggout'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Vuetify.js',
+      user: this.$auth.user
     }
   }
 }

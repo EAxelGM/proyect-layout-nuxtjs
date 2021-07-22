@@ -31,6 +31,14 @@
           :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="show_password = !show_password"
         />
+        <v-text-field 
+          v-model="password_confirm"
+          label="Confirma tu Contraseña"
+          prepend-icon="mdi-lock"
+          :type="show_password_confirm ? 'text' : 'password'"
+          :append-icon="show_password_confirm ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="show_password_confirm = !show_password_confirm"
+        />
         <div class="my-3">
           <v-btn color="secondary" text x-small to="/login">
             Ya tengo una cuenta 
@@ -39,7 +47,7 @@
       </v-container>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary">
+        <v-btn color="primary" @click="create()" :loading="loading">
           Crear Cuenta
         </v-btn>
         <v-spacer />
@@ -57,7 +65,40 @@ export default {
       email: '',
       password: '',
       show_password: false,
+      password_confirm: '',
+      show_password_confirm: false,
       loading: false,
+    }
+  },
+  methods:{
+    async create(){
+      this.loading = true;
+      const url = 'register';
+      const info = {
+        name: this.name,
+        lastname: this.lastname,
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.password_confirm,
+      } 
+
+      try {
+        await this.$axios.post(url,info);
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'success',
+          snackbar : true,
+          data: 'Cuenta creada!',
+        });
+        await this.$router.push('/login');
+      } catch (error) {
+        await this.$store.dispatch('alertas/GET_DATA', {
+          color : 'error',
+          snackbar : true,
+          data: error.response.data,
+        });
+      }
+
+      this.loading = false;
     }
   }
 }

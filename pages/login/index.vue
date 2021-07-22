@@ -13,6 +13,7 @@
 <script>
 import LoginForm from '@/components/LoginOptions/LoginForm';
 export default {
+  layout:'noLogged',
   components:{
     LoginForm,
   },

@@ -13,6 +13,7 @@
 <script>
 import RegisterForm from '@/components/LoginOptions/RegisterForm';
 export default {
+  layout:'noLogged',
   components:{
     RegisterForm
   },
