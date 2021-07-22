@@ -36,5 +36,5 @@ $ npm run start
 $ npm run generate
 ```
 
-## No olvides igual clonar el fron-end <a href="https://github.com/EAxelGM/proyect-layout-laravel" target="_blank">front-end</a>
+## No olvides igual clonar el <a href="https://github.com/EAxelGM/proyect-layout-laravel" target="_blank">back-end</a>
 
