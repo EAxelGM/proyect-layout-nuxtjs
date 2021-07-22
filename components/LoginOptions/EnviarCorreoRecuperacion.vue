@@ -174,7 +174,8 @@ export default {
       const url = 'profile/change-password';
       const info = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        withConfirm: false,
       };
       if(this.password == this.password_confirm){
         try {

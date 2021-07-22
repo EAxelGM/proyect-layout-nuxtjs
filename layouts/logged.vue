@@ -2,11 +2,59 @@
   <v-app style="background-color: #ababab;">
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
+      :mini-variant="false"
+      :clipped="false"
       fixed
       app
     >
+      <v-list>
+        <v-list-item>
+          <v-list-item-avatar>
+            <v-img :src="$auth.user.image ? $auth.user.image : 'http://localhost:8000/default/avatar.jpg'" />
+          </v-list-item-avatar>
+        </v-list-item>
+
+        <v-list-item link @click="openSettings = !openSettings">
+          <v-list-item-content>
+            <v-list-item-title class="text-h6">
+              {{$auth.user.name}} {{$auth.user.lastname}}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{$auth.user.email}}</v-list-item-subtitle>
+          </v-list-item-content>
+
+          <v-list-item-action>
+            <v-icon>{{ openSettings ? 'mdi-menu-up' : 'mdi-menu-down'}}</v-icon>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
+      <v-divider />
+      <v-banner v-model="openSettings" single-line transition="slide-y-transition">
+        <v-list
+          nav
+          dense
+          transition="scale-transition"
+        >
+          <v-list-item-group
+            color="primary"
+          >
+            <v-list-item
+              v-for="(item, i) in itemsSettingsAccount"
+              :key="i"
+              :to="item.to"
+              router
+              exact
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-banner>
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -30,82 +78,42 @@
       app
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title>{{title}} - {{user.name}} {{user.lastname}}</v-toolbar-title>
+      <v-toolbar-title>{{title}} - {{$auth.user.name}} {{$auth.user.lastname}}</v-toolbar-title>
       <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-footer
-      :absolute="!fixed"
+      :absolute="true"
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
+    <Alerta />
   </v-app>
 </template>
 
 <script>
+import Alerta from '@/components/Alertas/Alerta'
 export default {
   middleware: 'auth',
+  components:{
+    Alerta,
+  },
   data () {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
+      itemsSettingsAccount: [
+        { text: 'Editar Mi Cuenta', icon: 'mdi-account-cog-outline', to: '/mi-cuenta'},
+        { text: 'Modificar Contraseña', icon: 'mdi-lock-reset', to: '/mi-cuenta/modificar-password' },
+      ],
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Inicio',
           to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
         },
         {
           icon: 'mdi-logout',
@@ -113,11 +121,15 @@ export default {
           to: '/loggout'
         }
       ],
+
+      clipped: false,
+      drawer: false,
+      fixed: false,
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'Vuetify.js',
-      user: this.$auth.user
+      openSettings: false,
     }
   }
 }
