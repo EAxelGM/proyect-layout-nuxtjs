@@ -22,7 +22,7 @@
           <v-btn @click="dialog = false" color="secondary">
             Cancelar
           </v-btn>
-          <v-btn color="primary" @click="modificar()" :loading="loading">
+          <v-btn color="primary" @click="modificar()" :loading="loading" :disabled="nombre=='' || apellidos==''">
             Modificar
           </v-btn>
         </v-card-actions>

@@ -23,7 +23,7 @@
             />
             <v-row>
               <v-col>
-                <v-btn color="primary" @click="enviarCorreo(true)" :loading="loading"> 
+                <v-btn color="primary" @click="enviarCorreo(true)" :loading="loading" :disabled="email==''"> 
                   Enviar Codigo de Recuperacion
                 </v-btn>
               </v-col>
@@ -35,7 +35,7 @@
               v-model="codigo_verificacion"
               label="Ingresa el codigo de verificacion."
               prepend-icon="mdi-email"
-              type="text"
+              type="number"
             />
             <v-row>
               <v-col>
@@ -51,7 +51,7 @@
                 </v-btn>
               </v-col>
               <v-col>
-                <v-btn color="primary" @click="verificaCodigo()" :loading="loading">
+                <v-btn color="primary" @click="verificaCodigo()" :loading="loading" :disabled="codigo_verificacion==''">
                   Verificar Codigo
                 </v-btn>
               </v-col>
@@ -77,7 +77,7 @@
             />
             <v-row>
               <v-col>
-                <v-btn color="primary" :loading="loading" @click="changePassword()">
+                <v-btn color="primary" :loading="loading" @click="changePassword()" :disabled="password=='' || password_confirm==''">
                   Cambiar Contraseña
                 </v-btn>
               </v-col>

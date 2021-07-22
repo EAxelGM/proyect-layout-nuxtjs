@@ -39,7 +39,7 @@
         </v-row>
         <v-row>
           <v-col align="center">
-            <v-btn color="primary" :loading="loading" @click="changePassword()">
+            <v-btn color="primary" :loading="loading" @click="changePassword()" :disabled="pass_act=='' || pass_new=='' || pass_con==''">
               Cambiar contraseña
             </v-btn>
             <GeneradorPasswords />

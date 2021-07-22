@@ -47,7 +47,7 @@
       </v-container>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="create()" :loading="loading">
+        <v-btn color="primary" @click="create()" :loading="loading" :disabled="name=='' || lastname=='' || email=='' || password=='' || password_confirm==''">
           Crear Cuenta
         </v-btn>
         <v-spacer />

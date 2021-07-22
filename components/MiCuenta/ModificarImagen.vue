@@ -34,7 +34,7 @@
           <v-btn color="secondary" @click="dialog = false">
             Cancelar
           </v-btn>
-          <v-btn color="primary" @click="modificar()" :loading="loading">
+          <v-btn color="primary" @click="modificar()" :loading="loading" :disabled="!file">
             Modificar
           </v-btn>
         </v-card-actions>
@@ -58,10 +58,6 @@ export default {
     async modificar(){
       this.loading = true;
       const url = 'user-modificar-imagen';
-      const info = {
-        image: this.file
-      }
-
       try {
         let formData = new FormData();
         let config = { headers: { 'Content-Type': 'multipart/form-data' } };
